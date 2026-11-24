@@ -1,0 +1,23 @@
+:root {
+  --ink: #0d0914;
+  --plum-900: #150e1f;
+  --plum-800: #1e1429;
+  --plum-700: #2a1b39;
+  --gold: #d4af6a;
+  --gold-soft: rgba(212, 175, 106, 0.45);
+  --gold-faint: rgba(212, 175, 106, 0.18);
+  --text: #f0e7d8;
+  --muted: #a99bb6;
+  --danger: #d97a86;
+
+  --font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius: 16px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+}

@@ -1,0 +1,651 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88, 48, 110, 0.55), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(60, 30, 80, 0.4), transparent 70%),
+    var(--ink);
+  background-attachment: fixed;
+}
+
+/* Textura sutil de estrellas */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 120px 80px, rgba(212, 175, 106, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 200px 150px, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 60px 190px, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 170px 20px, rgba(212, 175, 106, 0.4), transparent),
+    radial-gradient(1px 1px at 90px 140px, rgba(255, 255, 255, 0.3), transparent);
+  background-size: 240px 240px;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ---------- Estructura ---------- */
+.shell {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) 110px;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+.brand__name {
+  font-size: 2.4rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding-left: 0.22em;
+}
+.brand__tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.page-title {
+  font-size: 1.7rem;
+  text-align: center;
+  margin-bottom: var(--space-1);
+}
+.page-lead {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: var(--space-5);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 0.85rem;
+}
+
+/* ---------- Separador dorado ---------- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--gold);
+  margin: var(--space-4) 0;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
+}
+
+/* ---------- Carta de tarot ---------- */
+.tarot {
+  position: relative;
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  border-radius: var(--radius);
+  border: 1px solid var(--gold-soft);
+  background: linear-gradient(170deg, rgba(42, 27, 57, 0.92), rgba(21, 14, 31, 0.96));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.tarot::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid var(--gold-faint);
+  border-radius: calc(var(--radius) - 4px);
+  pointer-events: none;
+}
+.tarot__label {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--space-3);
+}
+.tarot__label::before,
+.tarot__label::after {
+  content: '✦';
+  margin: 0 0.7em;
+  font-size: 0.6rem;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+.tarot--highlight {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 106, 0.15),
+    0 12px 36px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(212, 175, 106, 0.08);
+}
+
+/* ---------- Botones y chips ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 46px;
+  padding: 0 var(--space-5);
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, rgba(212, 175, 106, 0.22), rgba(212, 175, 106, 0.08));
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+.btn:hover {
+  background: rgba(212, 175, 106, 0.3);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn--ghost {
+  background: transparent;
+  border-color: var(--gold-soft);
+}
+.btn--danger {
+  color: var(--danger);
+  border-color: rgba(217, 122, 134, 0.5);
+  background: transparent;
+}
+.btn--block {
+  width: 100%;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.chip {
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  border: 1px solid var(--gold-faint);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.88rem;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.chip:hover {
+  border-color: var(--gold-soft);
+}
+.chip[aria-pressed='true'],
+.chip[aria-checked='true'] {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 175, 106, 0.14);
+}
+
+/* ---------- Formularios ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field__label {
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.input {
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border-radius: 12px;
+  border: 1px solid var(--gold-faint);
+  background: rgba(10, 6, 16, 0.6);
+  color: var(--text);
+  font: inherit;
+  width: 100%;
+}
+.input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-3);
+}
+.error {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+/* ---------- Onboarding ---------- */
+.onboarding {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+.reveal {
+  text-align: center;
+}
+.reveal__glyph {
+  font-size: 3.2rem;
+  line-height: 1;
+  margin: var(--space-3) 0;
+}
+.reveal__name {
+  font-size: 2.4rem;
+  color: var(--gold);
+}
+
+/* ---------- Luna ---------- */
+.moonline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.moon {
+  flex: none;
+}
+
+/* ---------- Selector de día ---------- */
+.daypicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  align-items: center;
+}
+.daypicker .input {
+  width: auto;
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  font-size: 0.85rem;
+}
+.datetitle {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  text-transform: capitalize;
+}
+
+/* ---------- Tu elemento / Energía del día ---------- */
+.element-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.element-hero__glyph {
+  font-size: 2.4rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--gold-soft);
+  background: rgba(0, 0, 0, 0.25);
+  flex: none;
+}
+.element-hero__name {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.element-hero__sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  width: 58px;
+  text-align: center;
+}
+.swatch__dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.notice {
+  font-size: 0.82rem;
+  color: var(--muted);
+  border-left: 2px solid var(--gold-soft);
+  padding-left: var(--space-3);
+  font-style: italic;
+}
+
+/* ---------- Tu look de hoy ---------- */
+.bar {
+  display: flex;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--gold-soft);
+}
+.bar__seg {
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 500;
+  min-width: 0;
+}
+.bar__seg + .bar__seg {
+  border-left: 1px solid rgba(0, 0, 0, 0.35);
+}
+.bar--mini {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.legend {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.legend__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+.legend__dots {
+  display: flex;
+}
+.legend__dots span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-left: -6px;
+}
+.legend__dots span:first-child {
+  margin-left: 0;
+}
+.legend__role {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.legend__tones {
+  font-size: 0.92rem;
+}
+.legend__pct {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--gold);
+}
+
+.look-sentence {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.4;
+  margin-top: var(--space-4);
+}
+.look-why {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-top: var(--space-2);
+}
+.look-limit {
+  margin-top: var(--space-3);
+  font-size: 0.85rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 10px;
+  background: rgba(212, 175, 106, 0.08);
+  border: 1px solid var(--gold-faint);
+}
+.look-warning {
+  margin-top: var(--space-3);
+  font-size: 0.88rem;
+  color: var(--gold);
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ---------- Accesorios ---------- */
+.metal-line {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.metal-line strong {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--gold);
+}
+.jewel-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.jewel-list li {
+  padding: var(--space-3);
+  border: 1px solid var(--gold-faint);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.jewel-list strong {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* ---------- Semana ---------- */
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.weekday {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 14px;
+  border: 1px solid var(--gold-faint);
+  background: linear-gradient(170deg, rgba(42, 27, 57, 0.8), rgba(21, 14, 31, 0.9));
+}
+.weekday:hover {
+  border-color: var(--gold-soft);
+}
+.weekday--today {
+  border-color: var(--gold);
+}
+.weekday__date {
+  text-align: center;
+  font-family: var(--font-serif);
+  line-height: 1.1;
+}
+.weekday__short {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.weekday__num {
+  font-size: 1.7rem;
+}
+.weekday__head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+.weekday__sentence {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ---------- Joyero ---------- */
+.stone-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--gold-faint);
+}
+.stone-row:first-of-type {
+  border-top: none;
+}
+.stone-row__name {
+  text-transform: capitalize;
+}
+.chip--sm {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  font-size: 0.8rem;
+}
+
+/* ---------- Navegación inferior ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, var(--ink) 55%, transparent);
+}
+.tabbar__inner {
+  display: flex;
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  background: rgba(21, 14, 31, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 4px;
+}
+.tabbar__btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 0;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tabbar__btn span:first-child {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.tabbar__btn[aria-current='page'] {
+  color: var(--gold);
+  background: rgba(212, 175, 106, 0.12);
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .shell {
+    padding-top: var(--space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
