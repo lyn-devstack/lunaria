@@ -330,7 +330,9 @@ button {
   text-align: center;
   font-family: var(--font-serif);
   font-size: 1.35rem;
-  text-transform: capitalize;
+}
+.datetitle::first-letter {
+  text-transform: uppercase;
 }
 
 /* ---------- Tu elemento / Energía del día ---------- */
@@ -512,7 +514,6 @@ button {
 }
 .jewel-list strong {
   font-weight: 500;
-  text-transform: capitalize;
 }
 
 /* ---------- Semana ---------- */
