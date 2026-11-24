@@ -59,6 +59,21 @@ export function Settings({ profile, onUpdate, onReset }: Props) {
         )}
       </TarotCard>
 
+      <TarotCard label="Instálala en tu móvil">
+        <ul className="install-steps">
+          <li>
+            <strong>iPhone (Safari):</strong> toca Compartir y elige «Añadir a pantalla de inicio».
+          </li>
+          <li>
+            <strong>Android (Chrome):</strong> abre el menú ⋮ y elige «Instalar app» o «Añadir a pantalla de
+            inicio».
+          </li>
+        </ul>
+        <p className="muted small" style={{ marginTop: 8 }}>
+          Se abrirá a pantalla completa, como una app.
+        </p>
+      </TarotCard>
+
       <TarotCard label="Tus datos">
         <p className="muted small" style={{ marginBottom: 12 }}>
           Todo se guarda solo en este dispositivo (localStorage). No hay cuentas ni servidor.

@@ -24,6 +24,7 @@ Lunaria es una web app en español que recomienda qué **ropa y accesorios** pon
 - **Accesorios:** metal del día y, si quieres, *Mi joyero*: añades tus joyas reales (tipo, metal y una o varias piedras, p. ej. un anillo de oro amarillo con esmeralda y diamantes). La app puntúa cada pieza sumando los elementos de sus piedras presentes en el look, da un extra si su metal es el del día y propone la mejor de cada tipo.
 - **Mi semana:** los 7 días con su look. Selector para consultar mañana u otra fecha.
 - **Fase lunar** calculada en local, sin APIs.
+- **Instalable en el móvil:** manifiesto web e iconos propios; se añade a la pantalla de inicio y se abre a pantalla completa.
 - **Sin backend:** todo se guarda en `localStorage`.
 
 ## Cómo decide el look

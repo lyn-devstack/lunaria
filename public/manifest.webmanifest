@@ -1,0 +1,18 @@
+{
+  "name": "Lunaria · tu atelier lunar",
+  "short_name": "Lunaria",
+  "description": "Qué ropa y accesorios ponerte cada día según el feng shui de los 5 elementos.",
+  "lang": "es",
+  "id": "/lunaria/",
+  "start_url": "/lunaria/",
+  "scope": "/lunaria/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0914",
+  "theme_color": "#0d0914",
+  "icons": [
+    { "src": "/lunaria/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/lunaria/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/lunaria/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
