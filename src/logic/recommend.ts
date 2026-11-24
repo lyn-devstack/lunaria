@@ -2,7 +2,7 @@ import { GENERATES } from '../data/cycles'
 import { ELEMENT_NAME } from '../data/elements'
 import type { Element, Look, LookPart, Relation, Role } from '../types'
 import { controllerOf, nourisherOf, relationOf } from './relations'
-import { pickTones } from './tones'
+import { pickIdeas } from './tones'
 
 type Spec = { element: Element; pct: number; role: Role }
 
@@ -74,13 +74,19 @@ const sentenceFor = (parts: LookPart[]): string => {
 export const recommend = (U: Element, D: Element, variant = 0): Look => {
   const relation = relationOf(U, D)
   const specs = specsFor(relation, U, D)
-  const tones = pickTones(
+  const [main, ...others] = pickIdeas(
     specs.map((s) => s.element),
     specs.map((s) => s.pct),
     U,
     variant,
+    3,
   )
-  const parts: LookPart[] = specs.map((s, i) => ({ ...s, tones: tones[i] }))
+  const withTones = (tones: LookPart['tones'][]): LookPart[] => specs.map((s, i) => ({ ...s, tones: tones[i] }))
+  const parts = withTones(main)
+  const ideas = others.map((t) => {
+    const ps = withTones(t)
+    return { parts: ps, sentence: sentenceFor(ps) }
+  })
 
   const controller = controllerOf(U)
   const inLook = parts.find((p) => p.element === controller)
@@ -89,6 +95,7 @@ export const recommend = (U: Element, D: Element, variant = 0): Look => {
   return {
     relation,
     parts,
+    ideas,
     limit,
     warning:
       relation === 'choque-U' ? 'No vayas 100% en tu color: añade el acento del día' : undefined,

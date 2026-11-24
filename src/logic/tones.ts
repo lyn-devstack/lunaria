@@ -54,25 +54,12 @@ const scoreCombos = (candidates: Tone[][], user: Element): Combo[] => {
 }
 
 /**
- * Elige un tono principal por parte buscando que combinen entre sí (sin choques tipo Navidad)
- * y que estén cerca de la energía de la usuaria. `variant` rota entre las mejores combinaciones
- * (casi igual de buenas) para no repetir siempre el mismo look.
- * Devuelve, por parte, los tonos a mostrar: el elegido primero y después sus compañeros compatibles.
+ * Tonos a mostrar por parte para una combinación elegida: el tono elegido primero y después sus
+ * compañeros compatibles. Nada de lo que se muestra puede chocar con lo ya mostrado.
  */
-export const pickTones = (
-  elements: Element[],
-  pcts: number[],
-  user: Element,
-  variant = 0,
-): Tone[][] => {
-  const candidates = elements.map((el) => tonesFor(el, user))
-  const combos = scoreCombos(candidates, user)
-  const near = combos.filter((c) => c.score >= combos[0].score - NEAR_WINDOW).slice(0, MAX_ROTATION)
-  const chosen = near[Math.abs(variant) % near.length].tones
-
-  // Los tonos ya mostrados en partes anteriores también cuentan: nada de lo que se muestra puede chocar.
+const displayFor = (chosen: Tone[], candidates: Tone[][], pcts: number[]): Tone[][] => {
   const shown: Tone[] = []
-  return elements.map((_, i) => {
+  return chosen.map((_, i) => {
     const others = chosen.filter((_, j) => j !== i)
     const rest = candidates[i]
       .filter(
@@ -91,3 +78,45 @@ export const pickTones = (
     return list
   })
 }
+
+/** En cuántas partes coinciden dos combinaciones (mismo tono principal). */
+const sharedTones = (a: Tone[], b: Tone[]): number => a.filter((t, i) => t === b[i]).length
+
+/**
+ * Varias ideas de look para el mismo día: la primera es la del día (`variant` rota entre las mejores
+ * combinaciones) y las siguientes son otras combinaciones igual de armoniosas, lo más distintas posible.
+ * Todas respetan los elementos y los % de las reglas; solo cambian los tonos concretos.
+ */
+export const pickIdeas = (
+  elements: Element[],
+  pcts: number[],
+  user: Element,
+  variant = 0,
+  count = 3,
+): Tone[][][] => {
+  const candidates = elements.map((el) => tonesFor(el, user))
+  const combos = scoreCombos(candidates, user)
+  const near = combos.filter((c) => c.score >= combos[0].score - NEAR_WINDOW).slice(0, MAX_ROTATION)
+  const start = Math.abs(variant) % near.length
+
+  const chosen: Combo[] = [near[start]]
+  const ordered = near.map((_, k) => near[(start + k) % near.length]).slice(1)
+  // Primero las que cambian al menos dos tonos respecto a las ya elegidas; si faltan, cualquiera distinta.
+  for (const strict of [true, false]) {
+    for (const c of ordered) {
+      if (chosen.length >= count) break
+      if (chosen.includes(c)) continue
+      const limit = strict ? elements.length - 1 : elements.length
+      if (chosen.every((p) => sharedTones(p.tones, c.tones) < limit)) chosen.push(c)
+    }
+  }
+  return chosen.map((c) => displayFor(c.tones, candidates, pcts))
+}
+
+/** La combinación principal del día (ver `pickIdeas`). */
+export const pickTones = (
+  elements: Element[],
+  pcts: number[],
+  user: Element,
+  variant = 0,
+): Tone[][] => pickIdeas(elements, pcts, user, variant, 1)[0]

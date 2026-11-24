@@ -166,6 +166,38 @@ describe('recommend: combinaciones que combinan', () => {
     }
   })
 
+  it('cada día ofrece otras ideas: mismos elementos y %, combinaciones distintas y sin choques', () => {
+    for (const [U, D] of pairs) {
+      for (const v of variants) {
+        const look = recommend(U, D, v)
+        expect(look.ideas.length, `${U}/${D}/v${v}`).toBeGreaterThanOrEqual(1)
+        const key = (parts: typeof look.parts) => parts.map((p) => p.tones[0].name).join('+')
+        const seen = new Set([key(look.parts)])
+        for (const idea of look.ideas) {
+          // mismos elementos, % y roles que el look principal
+          expect(idea.parts.map((p) => [p.element, p.pct, p.role])).toEqual(
+            look.parts.map((p) => [p.element, p.pct, p.role]),
+          )
+          // distinta de las demás
+          expect(seen.has(key(idea.parts)), `${U}/${D}/v${v} repetida`).toBe(false)
+          seen.add(key(idea.parts))
+          // sin choques entre tonos mostrados
+          for (let i = 0; i < idea.parts.length; i++)
+            for (let j = i + 1; j < idea.parts.length; j++)
+              for (const a of idea.parts[i].tones)
+                for (const b of idea.parts[j].tones)
+                  expect(clashes(a.name, b.name), `${U}/${D}: ${a.name}+${b.name}`).toBe(false)
+          expect(idea.sentence.length).toBeGreaterThan(10)
+        }
+      }
+    }
+  })
+
+  it('para Agua hay al menos 2 ideas extra casi todos los días (más de 3 en total)', () => {
+    const look = recommend('agua', 'fuego', 0)
+    expect(look.ideas.length).toBe(2)
+  })
+
   it('el resultado es determinista para la misma semana', () => {
     expect(recommend('fuego', 'madera', 3)).toEqual(recommend('fuego', 'madera', 3))
   })

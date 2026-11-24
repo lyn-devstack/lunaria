@@ -23,9 +23,17 @@ export interface LookPart {
   tones: Tone[]
 }
 
+/** Otra combinación de tonos para el mismo día: mismos elementos y %, distintos colores. */
+export interface LookIdea {
+  parts: LookPart[]
+  sentence: string
+}
+
 export interface Look {
   relation: Relation
   parts: LookPart[]
+  /** Otras ideas de look para el mismo día (sin la principal). */
+  ideas: LookIdea[]
   /** Elemento que controla a la usuaria y cuánto puede aparecer en el look. */
   limit: { element: Element; maxPct: number; inLook: boolean }
   warning?: string
