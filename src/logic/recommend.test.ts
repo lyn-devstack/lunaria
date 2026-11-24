@@ -117,15 +117,34 @@ describe('recommend: lenguaje del límite', () => {
 })
 
 describe('recommend: tono más cercano a U', () => {
-  it('Agua en día de Fuego: nunca rojo vivo, y casi siempre burdeos/granate', () => {
+  it('Agua en día de Fuego: nunca rojo vivo, y los tonos cercanos (burdeos/granate) siguen apareciendo', () => {
     let close = 0
-    const N = 28
+    const N = 56
     for (let v = 0; v < N; v++) {
       const fuego = recommend('agua', 'fuego', v).parts.find((p) => p.element === 'fuego')!
       expect(fuego.tones.map((t) => t.name)).not.toContain('rojo')
       if (['burdeos', 'granate'].includes(fuego.tones[0].name)) close++
     }
-    expect(close / N).toBeGreaterThanOrEqual(0.6)
+    // Es una preferencia, no una obligación: así hay variedad (rosa, naranja…) sin perder los cercanos.
+    expect(close / N).toBeGreaterThanOrEqual(0.2)
+  })
+
+  it('ningún tono domina: cada elemento reparte sus colores (ninguno supera el 70% de las veces)', () => {
+    for (const U of ELEMENTS) {
+      const counts: Record<string, Record<string, number>> = {}
+      for (let v = 0; v < 112; v++) {
+        const D = ELEMENTS[v % 5]
+        for (const p of recommend(U, D, v).parts) {
+          counts[p.element] ??= {}
+          counts[p.element][p.tones[0].name] = (counts[p.element][p.tones[0].name] || 0) + 1
+        }
+      }
+      for (const [el, c] of Object.entries(counts)) {
+        const total = Object.values(c).reduce((a, b) => a + b, 0)
+        if (total < 20) continue
+        expect(Math.max(...Object.values(c)) / total, `${U}: ${el}`).toBeLessThanOrEqual(0.7)
+      }
+    }
   })
 })
 

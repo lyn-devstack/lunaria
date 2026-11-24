@@ -26,10 +26,10 @@ const luminance = (hex: string): number => {
 }
 
 /** Cuánto pesa estar cerca de la energía de la usuaria frente a la armonía y el contraste. */
-const AFFINITY_BONUS = 2.5
+const AFFINITY_BONUS = 0.6
 /** Margen de puntuación dentro del cual las combinaciones se consideran igual de buenas y rotan. */
-const NEAR_WINDOW = 3
-const MAX_ROTATION = 8
+const NEAR_WINDOW = 4
+const MAX_ROTATION = 40
 
 /**
  * Todas las combinaciones (un tono por parte) con su puntuación: cercanía a la usuaria + armonía
@@ -97,7 +97,9 @@ export const pickIdeas = (
   const candidates = elements.map((el) => tonesFor(el, user))
   const combos = scoreCombos(candidates, user)
   const near = combos.filter((c) => c.score >= combos[0].score - NEAR_WINDOW).slice(0, MAX_ROTATION)
-  const start = Math.abs(variant) % near.length
+  // Reparto uniforme (secuencia de razón áurea): días consecutivos caen en zonas muy distintas
+  // de la lista, y a lo largo de las semanas pasan por todas las combinaciones por igual.
+  const start = Math.floor(((Math.abs(variant) * 0.6180339887) % 1) * near.length)
 
   const chosen: Combo[] = [near[start]]
   const ordered = near.map((_, k) => near[(start + k) % near.length]).slice(1)
