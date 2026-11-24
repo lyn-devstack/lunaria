@@ -2,7 +2,7 @@ import { GENERATES } from '../data/cycles'
 import { ELEMENT_NAME } from '../data/elements'
 import type { Element, Look, LookPart, Relation, Role } from '../types'
 import { controllerOf, nourisherOf, relationOf } from './relations'
-import { tonesFor } from './tones'
+import { pickTones } from './tones'
 
 type Spec = { element: Element; pct: number; role: Role }
 
@@ -71,12 +71,16 @@ const sentenceFor = (parts: LookPart[]): string => {
 }
 
 /** Motor de recomendación: elemento de la usuaria (U) + elemento del día (D) → look. */
-export const recommend = (U: Element, D: Element): Look => {
+export const recommend = (U: Element, D: Element, variant = 0): Look => {
   const relation = relationOf(U, D)
-  const parts: LookPart[] = specsFor(relation, U, D).map((s) => {
-    const tones = tonesFor(s.element, U)
-    return { ...s, tones: tones.slice(0, s.pct >= 40 ? 3 : 2) }
-  })
+  const specs = specsFor(relation, U, D)
+  const tones = pickTones(
+    specs.map((s) => s.element),
+    specs.map((s) => s.pct),
+    U,
+    variant,
+  )
+  const parts: LookPart[] = specs.map((s, i) => ({ ...s, tones: tones[i] }))
 
   const controller = controllerOf(U)
   const inLook = parts.find((p) => p.element === controller)

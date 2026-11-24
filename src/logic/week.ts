@@ -13,6 +13,12 @@ export const mondayOf = (d: Date): Date => addDays(startOfDay(d), -((d.getDay() 
 export const isSameDay = (a: Date, b: Date): boolean =>
   a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 
+/** Número de semana (desde 1970, empezando en lunes): rota las combinaciones de tonos cada semana. */
+export const weekVariant = (d: Date): number => {
+  const m = mondayOf(d)
+  return Math.floor(Date.UTC(m.getFullYear(), m.getMonth(), m.getDate()) / (7 * 86_400_000))
+}
+
 export interface WeekEntry {
   date: Date
   day: DayInfo
@@ -21,9 +27,10 @@ export interface WeekEntry {
 
 export const weekOf = (d: Date, user: Element): WeekEntry[] => {
   const monday = mondayOf(d)
+  const variant = weekVariant(d)
   return Array.from({ length: 7 }, (_, i) => {
     const date = addDays(monday, i)
     const day = dayInfo(date)
-    return { date, day, look: recommend(user, day.element) }
+    return { date, day, look: recommend(user, day.element, variant) }
   })
 }

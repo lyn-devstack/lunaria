@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { DAYS } from '../data/days'
 import { ELEMENTS, ELEMENT_NAME, ELEMENT_TONES } from '../data/elements'
 import { CONTROLS, GENERATES } from '../data/cycles'
+import { clashes } from '../data/harmony'
 import { limitText, recommend } from './recommend'
 import { controllerOf, nourisherOf, relationOf } from './relations'
 
@@ -115,11 +116,58 @@ describe('recommend: lenguaje del límite', () => {
 })
 
 describe('recommend: tono más cercano a U', () => {
-  it('Agua en día de Fuego: burdeos/granate antes que rojo vivo', () => {
-    const fuego = recommend('agua', 'fuego').parts.find((p) => p.element === 'fuego')!
-    const names = fuego.tones.map((t) => t.name)
-    expect(names[0]).toBe('burdeos')
-    expect(names).not.toContain('rojo')
+  it('Agua en día de Fuego: burdeos/granate, no rojo vivo, en cualquier semana', () => {
+    for (let v = 0; v < 8; v++) {
+      const fuego = recommend('agua', 'fuego', v).parts.find((p) => p.element === 'fuego')!
+      expect(['burdeos', 'granate']).toContain(fuego.tones[0].name)
+      expect(fuego.tones.map((t) => t.name)).not.toContain('rojo')
+    }
+  })
+})
+
+describe('recommend: combinaciones que combinan', () => {
+  const variants = Array.from({ length: 8 }, (_, v) => v)
+  const cases = pairs.flatMap(([U, D]) => variants.map((v) => [U, D, v] as const))
+
+  it('nunca hay un choque (tipo verde + rojo) entre los tonos mostrados de partes distintas', () => {
+    for (const [U, D, v] of cases) {
+      const { parts } = recommend(U, D, v)
+      for (let i = 0; i < parts.length; i++)
+        for (let j = i + 1; j < parts.length; j++)
+          for (const a of parts[i].tones)
+            for (const b of parts[j].tones)
+              expect(clashes(a.name, b.name), `${U}/${D}/v${v}: ${a.name} + ${b.name}`).toBe(false)
+    }
+  })
+
+  it('el resultado es determinista para la misma semana', () => {
+    expect(recommend('fuego', 'madera', 3)).toEqual(recommend('fuego', 'madera', 3))
+  })
+
+  it('rota entre combinaciones distintas según la semana', () => {
+    const tops = new Set(
+      variants.map((v) =>
+        recommend('fuego', 'madera', v)
+          .parts.map((p) => p.tones[0].name)
+          .join('+'),
+      ),
+    )
+    expect(tops.size).toBeGreaterThan(1)
+  })
+
+  it('Fuego en día de Madera (jueves) ya no es verde + rojo', () => {
+    for (const v of variants) {
+      const names = recommend('fuego', 'madera', v).parts.map((p) => p.tones[0].name)
+      expect(names.includes('rojo') && names.includes('verde')).toBe(false)
+    }
+  })
+
+  it('los porcentajes y elementos no cambian con la variante', () => {
+    for (const [U, D] of pairs) {
+      const base = recommend(U, D, 0).parts.map((p) => [p.element, p.pct, p.role])
+      for (const v of variants)
+        expect(recommend(U, D, v).parts.map((p) => [p.element, p.pct, p.role])).toEqual(base)
+    }
   })
 })
 
