@@ -22,6 +22,9 @@ export function TodayLook({ look }: { look: Look }) {
       </p>
 
       <ProportionBar parts={look.parts} />
+      <p className="look-style">
+        <strong>{look.style.label}</strong> · {look.style.help}
+      </p>
 
       <ul className="legend">
         {look.parts.map((p) => (
@@ -66,6 +69,7 @@ export function TodayLook({ look }: { look: Look }) {
                 <p className="idea__text">
                   {idea.parts.map((p) => `${p.tones[0].name} ${p.pct}%`).join(' · ')}
                 </p>
+                <p className="idea__style">{idea.style.label}</p>
                 <p className="idea__sentence muted small">{idea.sentence}</p>
               </li>
             ))}

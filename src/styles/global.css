@@ -463,6 +463,24 @@ button {
   color: var(--muted);
   margin-bottom: var(--space-3);
 }
+.look-style {
+  margin-top: var(--space-2);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+.look-style strong {
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.idea__style {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 2px;
+}
 .legend__help {
   font-size: 0.78rem;
   color: var(--muted);

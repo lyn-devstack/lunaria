@@ -2,6 +2,7 @@ import { GENERATES } from '../data/cycles'
 import { ELEMENT_NAME } from '../data/elements'
 import type { Element, Look, LookPart, Relation, Role } from '../types'
 import { controllerOf, nourisherOf, relationOf } from './relations'
+import { harmonyStyle } from '../data/harmony'
 import { pickIdeas } from './tones'
 
 type Spec = { element: Element; pct: number; role: Role }
@@ -83,9 +84,13 @@ export const recommend = (U: Element, D: Element, variant = 0): Look => {
   )
   const withTones = (tones: LookPart['tones'][]): LookPart[] => specs.map((s, i) => ({ ...s, tones: tones[i] }))
   const parts = withTones(main)
+  const styleOf = (ps: LookPart[]) => {
+    const { label, help } = harmonyStyle(ps.map((p) => p.tones[0].name))
+    return { label, help }
+  }
   const ideas = others.map((t) => {
     const ps = withTones(t)
-    return { parts: ps, sentence: sentenceFor(ps) }
+    return { parts: ps, sentence: sentenceFor(ps), style: styleOf(ps) }
   })
 
   const controller = controllerOf(U)
@@ -95,6 +100,7 @@ export const recommend = (U: Element, D: Element, variant = 0): Look => {
   return {
     relation,
     parts,
+    style: styleOf(parts),
     ideas,
     limit,
     warning:

@@ -27,11 +27,15 @@ export interface LookPart {
 export interface LookIdea {
   parts: LookPart[]
   sentence: string
+  /** Estilo según la teoría del color (monocromático, análogos, complementarios…). */
+  style: { label: string; help: string }
 }
 
 export interface Look {
   relation: Relation
   parts: LookPart[]
+  /** Estilo del look principal según la teoría del color. */
+  style: { label: string; help: string }
   /** Otras ideas de look para el mismo día (sin la principal). */
   ideas: LookIdea[]
   /** Elemento que controla a la usuaria y cuánto puede aparecer en el look. */

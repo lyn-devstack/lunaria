@@ -82,7 +82,8 @@ Nunca dice «evita X» si X aparece en tu look: en ese caso dice «no más del N
 ## ❦ &nbsp;Lo que hace
 
 - **Bienvenida mínima.** Solo mes y año de nacimiento. Enero cuenta como el año anterior; en febrero pregunta si naciste antes del 4. El elemento sale de la última cifra del año y se puede cambiar en Ajustes.
-- **Looks con armonía.** Elige tonos que combinan entre sí, siempre dentro de los colores de tu elemento y del día. Descarta parejas que chocan (verde con rojo, que parece Navidad) y varía cada día y cada semana para que no se repita.
+- **Looks con teoría del color.** Las proporciones y los elementos mandan (tu elemento, el del día y el color a evitar); dentro de ellos, los tonos se eligen con la rueda cromática: **monocromáticos**, **análogos** y **complementarios**, con neutros como base. Cada look dice su estilo. Descarta lo que chocaría (verde vivo con rojo parece Navidad) y reparte los colores para que ninguno domine ni se repitan los días.
+- **Varias ideas por día.** El look del día y dos ideas más, con los mismos elementos y proporciones pero otros tonos.
 - **Accesorios.** El metal del día y, si quieres, **Mi joyero**: añades tus joyas reales (anillo, cadena/colgante, pulsera, pendientes) con su metal y una o varias piedras. Lunaria te propone la mejor de cada tipo y te dice por qué.
 - **Mi semana.** Los 7 días con su look, y un selector para consultar mañana u otra fecha.
 - **Fase lunar** calculada en el propio dispositivo, sin APIs.
@@ -115,7 +116,7 @@ Cada parte tiene un rol: **base** (la mayor), **puente** y **acento** (la menor,
 Un proyecto pequeño con decisiones cuidadas:
 
 - **La lógica vive aparte de la interfaz.** `recommend(U, D)` es una función pura que devuelve el look completo, así que se prueba sin renderizar nada.
-- **86 tests** con Vitest: el cálculo del elemento (incluidos enero y febrero), las 25 combinaciones del motor, el lenguaje del límite, la armonía de tonos, las joyas, la luna y la semana.
+- **100+ tests** con Vitest: el cálculo del elemento (incluidos enero y febrero), las 25 combinaciones del motor, el lenguaje del límite, la teoría del color, las joyas, la luna y la semana.
 - **La armonía de color es datos, no código.** Las listas de parejas que chocan y de las que combinan están en [`src/data/harmony.ts`](src/data/harmony.ts), y se ajustan sin tocar el motor.
 - **Un test protege contra la Navidad:** comprueba en las 25 parejas y varias semanas que ningún look muestra una combinación prohibida.
 - **Sin backend y con privacidad.** Todo se guarda en `localStorage`. Solo hay un contador de visitas anónimo y sin cookies ([GoatCounter](https://www.goatcounter.com)): no recibe el mes ni el año de nacimiento, el elemento ni las joyas.
