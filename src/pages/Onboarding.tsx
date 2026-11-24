@@ -37,7 +37,7 @@ export function Onboarding({ onDone }: { onDone: (p: Profile) => void }) {
                 className="btn btn--block"
                 onClick={() =>
                   onDone({
-                    version: 1,
+                    version: 2,
                     onboarded: true,
                     element: result.element,
                     birthMonth: result.month,

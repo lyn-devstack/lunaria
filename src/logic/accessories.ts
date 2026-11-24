@@ -1,36 +1,52 @@
-import { STONE_ELEMENT, parseJewel } from '../data/jewelry'
+import { ELEMENT_NAME } from '../data/elements'
 import type { DayInfo } from '../data/days'
-import type { Jewel, Look } from '../types'
+import type { Element, Look, Piece } from '../types'
 
-export interface JewelPick {
-  jewel: Jewel
-  reason: string
+export interface PiecePick {
+  piece: Piece
   score: number
+  metalMatch: boolean
+  reason: string
 }
 
 /**
- * Joyas del joyero a recomendar: las que tienen una piedra cuyo elemento está en el look
- * (más peso cuanto mayor es su %), con un extra si el metal coincide con el del día.
- * Las joyas sin piedra solo se recomiendan si su metal es el del día.
+ * Joyas a recomendar: puntúan por la suma de los % de los elementos (distintos) de sus piedras
+ * que están en el look, con un extra si su metal es el del día. Una joya con varias piedras
+ * (esmeralda + diamantes = Madera + Metal) suma los dos elementos.
+ * Sin ninguna piedra en el look, solo se recomienda si su metal es el del día.
  */
-export const pickJewelry = (owned: string[], look: Look, day: DayInfo): JewelPick[] => {
-  const picks: JewelPick[] = []
-  for (const id of owned) {
-    const jewel = parseJewel(id)
-    if (!jewel) continue
-    const metalMatches = day.metals.includes(jewel.metal)
+export const pickJewelry = (owned: Piece[], look: Look, day: DayInfo): PiecePick[] => {
+  const picks: PiecePick[] = []
+  for (const piece of owned) {
+    const metalMatch = day.metals.includes(piece.metal)
 
-    if (jewel.stone) {
-      const part = look.parts.find((p) => p.element === STONE_ELEMENT[jewel.stone!])
-      if (!part) continue
-      picks.push({
-        jewel,
-        score: part.pct + (metalMatches ? 5 : 0),
-        reason: `${jewel.stone} es de ${part.element} (${part.pct}% de tu look)${metalMatches ? ' y su metal es el del día' : ''}`,
-      })
-    } else if (metalMatches) {
-      picks.push({ jewel, score: 1, reason: 'su metal es el del día' })
+    // Piedras de la joya agrupadas por elemento, solo las que están en el look.
+    const byElement = new Map<Element, string[]>()
+    for (const s of piece.stones) {
+      if (!look.parts.some((p) => p.element === s.element)) continue
+      byElement.set(s.element, [...(byElement.get(s.element) ?? []), s.name])
     }
+
+    let score = 0
+    const reasons: string[] = []
+    for (const [element, names] of byElement) {
+      const pct = look.parts.find((p) => p.element === element)!.pct
+      score += pct
+      reasons.push(`${names.join(', ')}: ${ELEMENT_NAME[element]} ${pct}%`)
+    }
+
+    if (score === 0 && !metalMatch) continue
+    if (metalMatch) {
+      score += score > 0 ? 5 : 1
+      reasons.push('metal del día')
+    }
+    picks.push({ piece, score, metalMatch, reason: reasons.join(' · ') })
   }
   return picks.sort((a, b) => b.score - a.score)
+}
+
+/** La mejor pieza de cada tipo (un anillo, un colgante…), manteniendo el orden por puntuación. */
+export const bestPerType = (picks: PiecePick[]): PiecePick[] => {
+  const seen = new Set<string>()
+  return picks.filter((p) => (seen.has(p.piece.type) ? false : (seen.add(p.piece.type), true)))
 }

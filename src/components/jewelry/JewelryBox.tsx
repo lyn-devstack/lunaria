@@ -1,39 +1,66 @@
-import { ELEMENTS, ELEMENT_NAME } from '../../data/elements'
-import { METALS, STONES } from '../../data/jewelry'
-import { ElementGlyph } from '../ui/ElementGlyph'
+import { useState } from 'react'
+import type { Piece } from '../../types'
 import { TarotCard } from '../ui/TarotCard'
-import { JewelItem } from './JewelItem'
+import { JewelCard } from './JewelCard'
+import { JewelForm } from './JewelForm'
 
 interface Props {
-  owned: string[]
-  onChange: (ids: string[]) => void
+  owned: Piece[]
+  onChange: (pieces: Piece[]) => void
 }
 
+/** `null` = formulario cerrado · `'new'` = añadiendo · Piece = editando esa joya. */
+type Editing = null | 'new' | Piece
+
 export function JewelryBox({ owned, onChange }: Props) {
-  const set = new Set(owned)
-  const toggle = (id: string) => {
-    const next = new Set(set)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
-    onChange([...next])
+  const [editing, setEditing] = useState<Editing>(null)
+
+  const save = (piece: Piece) => {
+    const exists = owned.some((p) => p.id === piece.id)
+    onChange(exists ? owned.map((p) => (p.id === piece.id ? piece : p)) : [...owned, piece])
+    setEditing(null)
+  }
+
+  if (editing) {
+    return (
+      <TarotCard label={editing === 'new' ? 'Nueva joya' : 'Editar joya'} highlight>
+        <JewelForm
+          key={editing === 'new' ? 'new' : editing.id}
+          initial={editing === 'new' ? undefined : editing}
+          onSave={save}
+          onCancel={() => setEditing(null)}
+        />
+      </TarotCard>
+    )
   }
 
   return (
     <div className="stack">
-      <TarotCard label="Solo metal">
-        <JewelItem stone={null} metals={METALS} owned={set} onToggle={toggle} />
-      </TarotCard>
+      <button className="btn btn--block" onClick={() => setEditing('new')}>
+        + Añadir joya
+      </button>
 
-      {ELEMENTS.map((el) => (
-        <TarotCard key={el} label={`Piedras de ${ELEMENT_NAME[el]}`}>
-          <p className="muted small" style={{ textAlign: 'center', marginTop: -4 }}>
-            <ElementGlyph element={el} />
+      {owned.length === 0 ? (
+        <TarotCard label="Aún vacío">
+          <p className="muted" style={{ textAlign: 'center' }}>
+            Añade tus anillos, colgantes, pulseras o pendientes, con su metal y sus piedras. Así te diré cuál
+            ponerte cada día.
           </p>
-          {STONES[el].map((stone) => (
-            <JewelItem key={stone} stone={stone} metals={METALS} owned={set} onToggle={toggle} />
-          ))}
         </TarotCard>
-      ))}
+      ) : (
+        <TarotCard label={`Tus joyas · ${owned.length}`}>
+          <ul className="jewel-list jewel-list--manage">
+            {owned.map((p) => (
+              <JewelCard
+                key={p.id}
+                piece={p}
+                onEdit={() => setEditing(p)}
+                onRemove={() => onChange(owned.filter((x) => x.id !== p.id))}
+              />
+            ))}
+          </ul>
+        </TarotCard>
+      )}
     </div>
   )
 }

@@ -1,17 +1,20 @@
 import type { DayInfo } from '../../data/days'
-import { pickJewelry } from '../../logic/accessories'
-import type { Look } from '../../types'
+import { TYPE_LABEL, pieceTitle } from '../../data/jewelry'
+import { bestPerType, pickJewelry } from '../../logic/accessories'
+import type { Look, Piece } from '../../types'
 import { TarotCard } from '../ui/TarotCard'
 
 interface Props {
   day: DayInfo
   look: Look
-  owned: string[]
+  owned: Piece[]
   onOpenJewelry: () => void
 }
 
 export function AccessoriesPanel({ day, look, owned, onOpenJewelry }: Props) {
   const picks = pickJewelry(owned, look, day)
+  const best = bestPerType(picks)
+  const extra = picks.length - best.length
 
   return (
     <TarotCard label="Accesorios">
@@ -28,22 +31,28 @@ export function AccessoriesPanel({ day, look, owned, onOpenJewelry }: Props) {
           </button>{' '}
           y te diré cuáles encajan con tu look.
         </p>
-      ) : picks.length === 0 ? (
+      ) : best.length === 0 ? (
         <p className="muted small" style={{ marginTop: 12 }}>
           Ninguna joya de tu joyero encaja hoy con el look; elige alguna del metal del día.
         </p>
       ) : (
-        <ul className="jewel-list">
-          {picks.map(({ jewel, reason }) => (
-            <li key={jewel.id}>
-              <strong>
-                {jewel.metal}
-                {jewel.stone ? ` · ${jewel.stone}` : ''}
-              </strong>
-              <p className="muted small">{reason}</p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="jewel-list">
+            {best.map(({ piece, reason }) => (
+              <li key={piece.id}>
+                <span className="legend__role">{TYPE_LABEL[piece.type]}</span>
+                <br />
+                <strong>{pieceTitle(piece)}</strong>
+                <p className="muted small">{reason}</p>
+              </li>
+            ))}
+          </ul>
+          {extra > 0 && (
+            <p className="muted small" style={{ marginTop: 8 }}>
+              +{extra} {extra === 1 ? 'joya más encaja' : 'joyas más encajan'} hoy, pero te propongo la mejor de cada tipo.
+            </p>
+          )}
+        </>
       )}
     </TarotCard>
   )

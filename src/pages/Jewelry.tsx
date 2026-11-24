@@ -1,9 +1,9 @@
 import { JewelryBox } from '../components/jewelry/JewelryBox'
-import type { Profile } from '../types'
+import type { Piece, Profile } from '../types'
 
 interface Props {
   profile: Profile
-  onChange: (ids: string[]) => void
+  onChange: (pieces: Piece[]) => void
 }
 
 export function Jewelry({ profile, onChange }: Props) {
@@ -11,8 +11,7 @@ export function Jewelry({ profile, onChange }: Props) {
     <div>
       <h2 className="page-title">Mi joyero</h2>
       <p className="page-lead">
-        Marca las joyas que tienes ({profile.jewelry.length}). Es opcional: sirve para sugerirte cuáles
-        llevar según tu look.
+        Tus joyas con su tipo, metal y piedras. Es opcional: sirve para sugerirte cuáles llevar según tu look.
       </p>
       <JewelryBox owned={profile.jewelry} onChange={onChange} />
     </div>

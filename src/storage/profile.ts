@@ -1,23 +1,26 @@
 import { ELEMENTS } from '../data/elements'
-import { parseJewel } from '../data/jewelry'
+import { isPiece } from '../data/jewelry'
 import type { Profile } from '../types'
 
 const KEY = 'lunaria:profile'
 
-const isValid = (p: any): p is Profile =>
-  p &&
-  p.version === 1 &&
-  typeof p.onboarded === 'boolean' &&
-  ELEMENTS.includes(p.element) &&
-  Array.isArray(p.jewelry)
+/**
+ * Lee el perfil. La versión 1 (joyero de casillas metal+piedra) se migra a la 2 conservando
+ * el elemento y los datos de nacimiento; las joyas antiguas no se pueden convertir y se descartan.
+ */
+export const parseProfile = (raw: unknown): Profile | null => {
+  const p = raw as any
+  if (!p || typeof p.onboarded !== 'boolean' || !ELEMENTS.includes(p.element)) return null
+
+  if (p.version === 1) return { ...p, version: 2, jewelry: [] }
+  if (p.version !== 2 || !Array.isArray(p.jewelry)) return null
+  return { ...p, jewelry: p.jewelry.filter(isPiece) }
+}
 
 export const loadProfile = (): Profile | null => {
   try {
     const raw = localStorage.getItem(KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw)
-    if (!isValid(parsed)) return null
-    return { ...parsed, jewelry: parsed.jewelry.filter((id: string) => parseJewel(id)) }
+    return raw ? parseProfile(JSON.parse(raw)) : null
   } catch {
     return null
   }

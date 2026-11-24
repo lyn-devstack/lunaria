@@ -4,7 +4,9 @@ export type Role = 'BASE' | 'PUENTE' | 'ACENTO'
 
 export type Relation = 'fuerte' | 'ideal' | 'consume' | 'choque-U' | 'choque-D'
 
-export type MetalName = 'oro' | 'plata' | 'oro rosa'
+export type MetalName = 'oro amarillo' | 'oro blanco' | 'oro rosa' | 'plata'
+
+export type JewelType = 'anillo' | 'colgante' | 'pulsera' | 'pendientes' | 'otro'
 
 export interface Tone {
   name: string
@@ -31,18 +33,27 @@ export interface Look {
   sentence: string
 }
 
-export interface Jewel {
+/** Una piedra con su elemento (del catálogo, o elegido por la usuaria si es "otra piedra"). */
+export interface Stone {
+  name: string
+  element: Element
+}
+
+/** Una joya real de la usuaria: tipo + metal + cero o más piedras. */
+export interface Piece {
   id: string
+  type: JewelType
   metal: MetalName
-  stone: string | null
+  stones: Stone[]
+  name?: string
 }
 
 export interface Profile {
-  version: 1
+  version: 2
   onboarded: boolean
   element: Element
   birthMonth?: number
   birthYear?: number
   beforeFeb4?: boolean
-  jewelry: string[]
+  jewelry: Piece[]
 }

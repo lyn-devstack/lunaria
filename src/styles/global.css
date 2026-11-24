@@ -566,18 +566,60 @@ button {
 }
 
 /* ---------- Joyero ---------- */
-.stone-row {
+.stone-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: var(--space-3) 0;
+  padding: var(--space-2) 0;
   border-top: 1px solid var(--gold-faint);
 }
-.stone-row:first-of-type {
-  border-top: none;
+.stone-group__label {
+  font-size: 0.8rem;
+  color: var(--muted);
 }
-.stone-row__name {
+.custom-stone {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+}
+.custom-stone .input {
+  min-height: 40px;
+}
+.custom-stone .btn {
+  grid-column: 1 / -1;
+  min-height: 40px;
+}
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.jewel-list--manage li,
+.jewel-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.jewel-card__title {
+  font-weight: 500;
+}
+.jewel-card__stones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--space-3);
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+.stone-tag {
   text-transform: capitalize;
+}
+.jewel-card__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.chip--danger {
+  color: var(--danger);
+  border-color: rgba(217, 122, 134, 0.5);
 }
 .chip--sm {
   min-height: 32px;
