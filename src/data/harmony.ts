@@ -10,6 +10,7 @@ export const CLASH: [string, string][] = [
   ['verde', 'granate'],
   ['verde', 'burdeos'],
   ['verde', 'rosa'],
+  ['verde', 'naranja'],
   ['turquesa', 'rojo'],
   ['rojo', 'naranja'],
   ['rojo', 'rosa'],

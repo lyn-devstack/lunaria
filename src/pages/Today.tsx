@@ -6,7 +6,7 @@ import { YourElement } from '../components/today/YourElement'
 import { MoonPhase } from '../components/layout/MoonPhase'
 import { dayInfo } from '../data/days'
 import { recommend } from '../logic/recommend'
-import { weekVariant } from '../logic/week'
+import { dayVariant } from '../logic/week'
 import type { Profile } from '../types'
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
 
 export function Today({ profile, picker, onOpenJewelry }: Props) {
   const day = dayInfo(picker.date)
-  const look = recommend(profile.element, day.element, weekVariant(picker.date))
+  const look = recommend(profile.element, day.element, dayVariant(picker.date))
 
   const title = picker.date.toLocaleDateString('es-ES', {
     weekday: 'long',

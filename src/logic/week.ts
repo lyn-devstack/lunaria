@@ -19,6 +19,12 @@ export const weekVariant = (d: Date): number => {
   return Math.floor(Date.UTC(m.getFullYear(), m.getMonth(), m.getDate()) / (7 * 86_400_000))
 }
 
+/**
+ * Variante de tonos de un día concreto: cambia cada semana Y cada día, así que dos días con el mismo
+ * elemento (lunes/miércoles, martes/domingo) no repiten look.
+ */
+export const dayVariant = (d: Date): number => weekVariant(d) * 7 + d.getDay()
+
 export interface WeekEntry {
   date: Date
   day: DayInfo
@@ -27,10 +33,9 @@ export interface WeekEntry {
 
 export const weekOf = (d: Date, user: Element): WeekEntry[] => {
   const monday = mondayOf(d)
-  const variant = weekVariant(d)
   return Array.from({ length: 7 }, (_, i) => {
     const date = addDays(monday, i)
     const day = dayInfo(date)
-    return { date, day, look: recommend(user, day.element, variant) }
+    return { date, day, look: recommend(user, day.element, dayVariant(date)) }
   })
 }

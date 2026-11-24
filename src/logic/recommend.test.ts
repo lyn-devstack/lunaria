@@ -4,6 +4,7 @@ import { ELEMENTS, ELEMENT_NAME, ELEMENT_TONES } from '../data/elements'
 import { CONTROLS, GENERATES } from '../data/cycles'
 import { clashes } from '../data/harmony'
 import { limitText, recommend } from './recommend'
+import { dayVariant } from './week'
 import { controllerOf, nourisherOf, relationOf } from './relations'
 
 const pairs = ELEMENTS.flatMap((U) => ELEMENTS.map((D) => [U, D] as const))
@@ -116,12 +117,15 @@ describe('recommend: lenguaje del límite', () => {
 })
 
 describe('recommend: tono más cercano a U', () => {
-  it('Agua en día de Fuego: burdeos/granate, no rojo vivo, en cualquier semana', () => {
-    for (let v = 0; v < 8; v++) {
+  it('Agua en día de Fuego: nunca rojo vivo, y casi siempre burdeos/granate', () => {
+    let close = 0
+    const N = 28
+    for (let v = 0; v < N; v++) {
       const fuego = recommend('agua', 'fuego', v).parts.find((p) => p.element === 'fuego')!
-      expect(['burdeos', 'granate']).toContain(fuego.tones[0].name)
       expect(fuego.tones.map((t) => t.name)).not.toContain('rojo')
+      if (['burdeos', 'granate'].includes(fuego.tones[0].name)) close++
     }
+    expect(close / N).toBeGreaterThanOrEqual(0.6)
   })
 })
 
@@ -137,6 +141,28 @@ describe('recommend: combinaciones que combinan', () => {
           for (const a of parts[i].tones)
             for (const b of parts[j].tones)
               expect(clashes(a.name, b.name), `${U}/${D}/v${v}: ${a.name} + ${b.name}`).toBe(false)
+    }
+  })
+
+  it('dos días con el mismo elemento (lunes/miércoles) no repiten look en la misma semana', () => {
+    const lunes = new Date(2026, 10, 23)
+    const miercoles = new Date(2026, 10, 25)
+    for (const U of ELEMENTS) {
+      const a = recommend(U, 'agua', dayVariant(lunes)).parts.map((p) => p.tones[0].name).join('+')
+      const b = recommend(U, 'agua', dayVariant(miercoles)).parts.map((p) => p.tones[0].name).join('+')
+      expect(a, `U=${U}`).not.toBe(b)
+    }
+  })
+
+  it('hay variedad real a lo largo de las semanas (no siempre el mismo tono principal)', () => {
+    for (const U of ELEMENTS) {
+      for (const D of ELEMENTS) {
+        const tops = new Set(
+          Array.from({ length: 28 }, (_, v) => recommend(U, D, v).parts[0].tones[0].name),
+        )
+        // Para Agua en día de Agua (70/30) la base es siempre su elemento, pero tiene varios tonos.
+        expect(tops.size, `${U}/${D}`).toBeGreaterThan(1)
+      }
     }
   })
 

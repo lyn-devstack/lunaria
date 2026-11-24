@@ -19,13 +19,32 @@ interface Combo {
   score: number
 }
 
-/** Todas las combinaciones (un tono por parte) con su puntuación de armonía y cercanía a la usuaria. */
+/** Luminosidad percibida de un color #rrggbb (0 – 255). */
+const luminance = (hex: string): number => {
+  const n = parseInt(hex.slice(1), 16)
+  return 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)
+}
+
+/** Cuánto pesa estar cerca de la energía de la usuaria frente a la armonía y el contraste. */
+const AFFINITY_BONUS = 2.5
+/** Margen de puntuación dentro del cual las combinaciones se consideran igual de buenas y rotan. */
+const NEAR_WINDOW = 3
+const MAX_ROTATION = 8
+
+/**
+ * Todas las combinaciones (un tono por parte) con su puntuación: cercanía a la usuaria + armonía
+ * entre tonos + un punto si hay contraste claro/oscuro (looks menos planos).
+ */
 const scoreCombos = (candidates: Tone[][], user: Element): Combo[] => {
   const out: Combo[] = []
   const walk = (i: number, picked: Tone[], score: number) => {
-    if (i === candidates.length) return void out.push({ tones: picked, score })
+    if (i === candidates.length) {
+      const lums = picked.map((t) => luminance(t.hex))
+      const contrast = Math.max(...lums) - Math.min(...lums) >= 90 ? 1 : 0
+      return void out.push({ tones: picked, score: score + contrast })
+    }
     candidates[i].forEach((t, idx) => {
-      let s = score + (t.affinity.includes(user) ? 1 : 0) - 0.1 * idx
+      let s = score + (t.affinity.includes(user) ? AFFINITY_BONUS : 0) - 0.05 * idx
       for (const p of picked) s += harmony(p.name, t.name)
       walk(i + 1, [...picked, t], s)
     })
@@ -48,7 +67,7 @@ export const pickTones = (
 ): Tone[][] => {
   const candidates = elements.map((el) => tonesFor(el, user))
   const combos = scoreCombos(candidates, user)
-  const near = combos.filter((c) => c.score >= combos[0].score - 1.5).slice(0, 4)
+  const near = combos.filter((c) => c.score >= combos[0].score - NEAR_WINDOW).slice(0, MAX_ROTATION)
   const chosen = near[Math.abs(variant) % near.length].tones
 
   // Los tonos ya mostrados en partes anteriores también cuentan: nada de lo que se muestra puede chocar.
