@@ -22,7 +22,11 @@ export function AppShell({ tab, onTab, children }: Props) {
       <main className="shell">
         <Brand />
         {children}
-        <p className="footer-note">Hecho con luna y cariño · tus datos se quedan en este dispositivo</p>
+        <p className="footer-note">
+          Hecho con luna y cariño · tus datos se quedan en este dispositivo.
+          <br />
+          Solo se cuentan las visitas, de forma anónima y sin cookies.
+        </p>
       </main>
       <TabBar tab={tab} onChange={onTab} />
     </>

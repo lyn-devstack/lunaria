@@ -26,6 +26,7 @@ Lunaria es una web app en español que recomienda qué **ropa y accesorios** pon
 - **Fase lunar** calculada en local, sin APIs.
 - **Instalable en el móvil:** manifiesto web e iconos propios; se añade a la pantalla de inicio y se abre a pantalla completa.
 - **Sin backend:** todo se guarda en `localStorage`.
+- **Privacidad:** solo hay un contador de visitas anónimo y sin cookies ([GoatCounter](https://www.goatcounter.com)). No recibe el mes ni el año de nacimiento, el elemento ni las joyas.
 
 ## Cómo decide el look
 
