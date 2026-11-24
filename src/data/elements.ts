@@ -47,6 +47,7 @@ export const ELEMENT_TONES: Record<Element, Tone[]> = {
   madera: [
     { name: 'verde', hex: '#3f9a5e', affinity: ['fuego', 'agua'] },
     { name: 'verde botella', hex: '#155a41', affinity: ['agua', 'tierra'] },
+    { name: 'verde oliva', hex: '#6b7332', affinity: ['agua', 'tierra', 'fuego'] },
     { name: 'turquesa', hex: '#2aa6a0', affinity: ['agua', 'metal'] },
   ],
   fuego: [

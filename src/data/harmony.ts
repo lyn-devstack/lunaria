@@ -9,6 +9,15 @@ import { ELEMENT_TONES } from './elements'
 export const CLASH: [string, string][] = [
   ['verde', 'rojo'],
   ['verde botella', 'rojo'],
+  // Verde + rojizos = disfraz de Navidad. El ÚNICO verde que puede ir con burdeos es el oliva.
+  ['verde botella', 'burdeos'],
+  ['verde botella', 'granate'],
+  ['verde botella', 'naranja'],
+  ['verde botella', 'rosa'],
+  ['verde oliva', 'rojo'],
+  ['verde oliva', 'granate'],
+  ['verde oliva', 'rosa'],
+  ['verde oliva', 'naranja'],
   ['verde', 'granate'],
   ['verde', 'burdeos'],
   ['verde', 'rosa'],
@@ -23,7 +32,16 @@ export const CLASH: [string, string][] = [
 
 export const CHIC: [string, string][] = [
   // Fuego con el resto
-  ['burdeos', 'verde botella'],
+  ['burdeos', 'verde oliva'],
+  ['verde oliva', 'crudo'],
+  ['verde oliva', 'camel'],
+  ['verde oliva', 'marrón'],
+  ['verde oliva', 'beige'],
+  ['verde oliva', 'blanco'],
+  ['verde oliva', 'negro'],
+  ['verde oliva', 'azul marino'],
+  ['verde oliva', 'mostaza'],
+  ['verde oliva', 'terracota'],
   ['burdeos', 'camel'],
   ['burdeos', 'crudo'],
   ['burdeos', 'gris'],

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ELEMENT_TONES } from './elements'
-import { harmony, harmonyStyle, isNeutral, theoryScore } from './harmony'
+import { clashes, harmony, harmonyStyle, isNeutral, theoryScore } from './harmony'
 
 const ALL = Object.values(ELEMENT_TONES).flat().map((t) => t.name)
 
@@ -32,6 +32,13 @@ describe('theoryScore (teoría del color)', () => {
   it('los choques de la lista siguen puntuando como choque', () => {
     expect(harmony('verde', 'rojo')).toBe(-10)
     expect(harmony('verde', 'naranja')).toBe(-10)
+  })
+  it('verde + rojizos es disfraz de Navidad: prohibido, salvo el verde oliva con burdeos', () => {
+    for (const green of ['verde', 'verde botella'])
+      for (const red of ['rojo', 'burdeos', 'granate', 'naranja', 'rosa']) expect(clashes(green, red), `${green}+${red}`).toBe(true)
+    expect(clashes('verde oliva', 'burdeos')).toBe(false)
+    expect(harmony('verde oliva', 'burdeos')).toBeGreaterThan(0)
+    for (const red of ['rojo', 'granate', 'naranja', 'rosa']) expect(clashes('verde oliva', red), `oliva+${red}`).toBe(true)
   })
 })
 

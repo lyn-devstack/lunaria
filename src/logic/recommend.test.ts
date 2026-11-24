@@ -129,7 +129,9 @@ describe('recommend: tono más cercano a U', () => {
     expect(close / N).toBeGreaterThanOrEqual(0.2)
   })
 
-  it('ningún tono domina: cada elemento reparte sus colores (ninguno supera el 70% de las veces)', () => {
+  // Tope del 85%: cuando el look lleva rojizos (burdeos, granate, rosa, naranja) casi todos los verdes
+  // quedan prohibidos (verde + rojizo = Navidad), y el turquesa pasa a ser el verde "seguro".
+  it('ningún tono domina: cada elemento reparte sus colores (ninguno supera el 85% de las veces)', () => {
     for (const U of ELEMENTS) {
       const counts: Record<string, Record<string, number>> = {}
       for (let v = 0; v < 112; v++) {
@@ -142,7 +144,7 @@ describe('recommend: tono más cercano a U', () => {
       for (const [el, c] of Object.entries(counts)) {
         const total = Object.values(c).reduce((a, b) => a + b, 0)
         if (total < 20) continue
-        expect(Math.max(...Object.values(c)) / total, `${U}: ${el}`).toBeLessThanOrEqual(0.7)
+        expect(Math.max(...Object.values(c)) / total, `${U}: ${el}`).toBeLessThanOrEqual(0.85)
       }
     }
   })
@@ -215,6 +217,19 @@ describe('recommend: combinaciones que combinan', () => {
   it('para Agua hay al menos 2 ideas extra casi todos los días (más de 3 en total)', () => {
     const look = recommend('agua', 'fuego', 0)
     expect(look.ideas.length).toBe(2)
+  })
+
+  it('nunca verde (que no sea oliva) con burdeos/granate/rojo/naranja en ningún look ni idea', () => {
+    const greens = ['verde', 'verde botella']
+    const reds = ['burdeos', 'granate', 'rojo', 'naranja', 'rosa']
+    for (const [U, D, v] of cases) {
+      const look = recommend(U, D, v)
+      for (const set of [look, ...look.ideas]) {
+        const names = set.parts.flatMap((p) => p.tones.map((t) => t.name))
+        const bad = greens.some((g) => names.includes(g)) && reds.some((r) => names.includes(r))
+        expect(bad, `${U}/${D}/v${v}: ${names.join(', ')}`).toBe(false)
+      }
+    }
   })
 
   it('el resultado es determinista para la misma semana', () => {
